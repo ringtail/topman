@@ -5,11 +5,8 @@ import (
 	"fmt"
 )
 
-const (
-	DEFAULT_TIME_TICKER = 300 * time.Second
-)
-
 type Topman struct {
+	Interval int
 	Corsairs []*Corsair
 	Captain  *Captain
 }
@@ -39,7 +36,7 @@ func (tm *Topman) OnDuty(corsairs []*Corsair, captain *Captain) (err error) {
 	tm.Attention()
 	tm.Corsairs = corsairs
 	tm.Captain = captain
-	ticker := time.NewTicker(DEFAULT_TIME_TICKER)
+	ticker := time.NewTicker(time.Second *time.Duration(tm.Interval))
 	quit := make(chan struct{})
 	for {
 		select {

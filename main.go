@@ -14,11 +14,13 @@ import (
 var (
 	config_file *string
 	dingding_token *string
+	interval *int
 )
 
 func init() {
 	config_file = flag.String("config", "topman.conf", "You can specific a config file.")
 	dingding_token = flag.String("token","","dingbot token")
+	interval = flag.Int("interval",300,"interval time")
 }
 
 func main() {
@@ -48,7 +50,9 @@ func Sailing(config_file string) {
 		PhoneNumber:*dingding_token,
 	}
 
-	topman := &seaway.Topman{}
+	topman := &seaway.Topman{
+		Interval: *interval,
+	}
 
 	if err := topman.OnDuty(corsairs, captain); err != nil {
 		log.Println("🔭topman has unexpectedly exited or been terminated. Because of %s", err.Error())
