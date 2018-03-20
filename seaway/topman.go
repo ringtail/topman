@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	DEFAULT_TIME_TICKER = 30 * time.Second
+	DEFAULT_TIME_TICKER = 5 * time.Minute
 )
 
 type Topman struct {
@@ -27,10 +27,10 @@ func (tm *Topman) Attention(){
     /  /:/__\/\  \:\  /:/\__\/  \:\/:/     /  /:/      \__\::/     |  |:/:/          
    /__/:/      \  \:\/:/      \  \::/     /  /:/       /  /:/      |__|::/           
    \__\/        \  \::/        \__\/     /__/:/       /__/:/       /__/:/            
-                 \__\/                   \__\/        \__\/        \__\/             
-	======================================================================
-						Yes Commander. I am on duty! 
-	======================================================================
+                 \__\/                   \__\/        \__\/        \__\/
+  ======================================================================
+                     Yes Commander. I am on duty! 
+  ======================================================================
 	`
 	fmt.Println(attention_msg)
 }
@@ -75,7 +75,7 @@ func (tm *Topman) Lookout(corsair *Corsair) (err error) {
 func (tm *Topman) LookoutAround() (err error) {
 	if len(tm.Corsairs) != 0 {
 		for _, c := range tm.Corsairs {
-			tm.Lookout(c)
+			go tm.Lookout(c)
 		}
 	}
 	return
