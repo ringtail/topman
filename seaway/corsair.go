@@ -24,7 +24,7 @@ func (cs *Corsair) Wigwag() (spotted bool, err error) {
 	}
 	pinger.Count = 3
 	pinger.Timeout = time.Second * 5
-	pinger.SetPrivileged(true)
+	//pinger.SetPrivileged(true)
 	pinger.Run() // blocks until finished
 	stats := pinger.Statistics() // get send/receive/rtt stats
 	if int(stats.PacketLoss) > cs.Threshold {

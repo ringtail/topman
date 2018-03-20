@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	DEFAULT_TIME_TICKER = 5 * time.Minute
+	DEFAULT_TIME_TICKER = 300 * time.Second
 )
 
 type Topman struct {
