@@ -6,22 +6,33 @@ import (
 	"log"
 	"os"
 	"encoding/json"
+	"github.com/ringtail/topman/seaway"
+	"os/signal"
+	"fmt"
 )
 
 var (
 	config_file *string
+	dingding_token *string
 )
 
 func init() {
 	config_file = flag.String("config", "topman.conf", "You can specific a config file.")
+	dingding_token = flag.String("token","","dingbot token")
 }
 
 func main() {
 	flag.Parse()
-	if config_file == nil {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, os.Kill)
+
+	if config_file == nil || dingding_token == nil {
+		fmt.Println("token must provide.")
 		return
 	}
-	Sailing(*config_file)
+	go Sailing(*config_file)
+	<-c
+	fmt.Println("kill topman and exit.")
 }
 
 func Sailing(config_file string) {
@@ -30,12 +41,14 @@ func Sailing(config_file string) {
 		log.Printf("Failed to read config file, Because of %s", err.Error())
 		os.Exit(-1)
 	}
-	corsairs := make([]*Corsair, 0)
+	corsairs := make([]*seaway.Corsair, 0)
 	json.Unmarshal(raw, &corsairs)
 
-	captain := &Captain{}
+	captain := &seaway.Captain{
+		PhoneNumber:*dingding_token,
+	}
 
-	topman := &Topman{}
+	topman := &seaway.Topman{}
 
 	if err := topman.OnDuty(corsairs, captain); err != nil {
 		log.Println("🔭topman has unexpectedly exited or been terminated. Because of %s", err.Error())

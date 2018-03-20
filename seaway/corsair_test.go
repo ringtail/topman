@@ -1,4 +1,4 @@
-package main
+package seaway
 
 import (
 	"testing"
@@ -10,7 +10,7 @@ var (
 
 func init() {
 	default_corsair = &Corsair{
-		Ip:        "aliyun.com",
+		Ip:        "8.8.8.8",
 		Threshold: 30,
 	}
 }

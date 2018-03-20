@@ -1,12 +1,15 @@
-package main
+package seaway
 
 import (
 	"net/http"
 	"encoding/json"
 	"bytes"
+	"fmt"
 )
 
-type Captain struct{}
+type Captain struct{
+	PhoneNumber string
+}
 
 type DingTalkMsg struct {
 	MsgType string `json:"msgtype"`
@@ -24,7 +27,7 @@ func (ct *Captain) Dispose(corsairInfo *CorsairInfo) (err error) {
 		},
 	}
 	dtmBytes, err := json.Marshal(dtm)
-
-	_, err = http.Post("https://oapi.dingtalk.com/robot/send?access_token=c5d88af08d421bab44020fad40d58bf8137a258959716d9c736b9e730b2bc551", "application/json", bytes.NewBuffer(dtmBytes))
+	fmt.Printf("Yes,commander. Enemies are found: %s\n",corsairInfo.Msg)
+	_, err = http.Post(ct.PhoneNumber, "application/json", bytes.NewBuffer(dtmBytes))
 	return
 }
