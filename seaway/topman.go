@@ -3,12 +3,14 @@ package seaway
 import (
 	"time"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 )
 
 type Topman struct {
 	Interval int
 	Corsairs []*Corsair
 	Captain  *Captain
+	IsLock bool
 }
 
 func (tm *Topman) Attention(){
@@ -36,6 +38,8 @@ func (tm *Topman) OnDuty(corsairs []*Corsair, captain *Captain) (err error) {
 	tm.Attention()
 	tm.Corsairs = corsairs
 	tm.Captain = captain
+	log.Debugf("Topman is onDuty with interval %d\n",tm.Interval)
+	tm.LookoutAround()
 	ticker := time.NewTicker(time.Second *time.Duration(tm.Interval))
 	quit := make(chan struct{})
 	for {
@@ -70,10 +74,22 @@ func (tm *Topman) Lookout(corsair *Corsair) (err error) {
 }
 
 func (tm *Topman) LookoutAround() (err error) {
+	log.Debugf("=============================")
+	log.Debugf("Topman is looking out around.")
+	if tm.IsLock == true {
+		log.Warn("Last duty is not finished, please increase the value of interval.")
+		return
+	}
+	tm.IsLock = true
 	if len(tm.Corsairs) != 0 {
-		for _, c := range tm.Corsairs {
-			go tm.Lookout(c)
+		for index, _ := range tm.Corsairs {
+			c := tm.Corsairs[index]
+			err = tm.Lookout(c)
+			if err != nil {
+				log.Warnf("Topman failed to lookout %s,Because of %s",c.Name,err.Error())
+				}
 		}
 	}
+	tm.IsLock = false
 	return
 }

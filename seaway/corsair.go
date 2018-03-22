@@ -2,6 +2,7 @@ package seaway
 
 import (
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"github.com/sparrc/go-ping"
 	"time"
 )
@@ -11,9 +12,9 @@ type CorsairInfo struct {
 }
 
 type Corsair struct {
-	Name string `json:"name"`
+	Name      string `json:"name"`
 	Ip        string `json:"ip"`
-	Threshold int	`json:"threshold"`
+	Threshold int    `json:"threshold"`
 	Loss      int
 }
 
@@ -25,12 +26,13 @@ func (cs *Corsair) Wigwag() (spotted bool, err error) {
 	pinger.Count = 3
 	pinger.Timeout = time.Second * 5
 	pinger.SetPrivileged(true)
-	pinger.Run() // blocks until finished
+	pinger.Run()                 // blocks until finished
 	stats := pinger.Statistics() // get send/receive/rtt stats
+	log.Debugf("%s packet loss is %f, current threshold is %d", cs.Name, stats.PacketLoss, cs.Threshold)
 	if int(stats.PacketLoss) > cs.Threshold {
 		cs.Loss = int(stats.PacketLoss)
-		return true ,nil
-	}else{
+		return true, nil
+	} else {
 		cs.Loss = 0
 	}
 	return
@@ -38,6 +40,6 @@ func (cs *Corsair) Wigwag() (spotted bool, err error) {
 
 func (cs *Corsair) Info() (corsairInfo *CorsairInfo, err error) {
 	return &CorsairInfo{
-		Msg: fmt.Sprintf("Name: %s, Ip: %s, PacketLoss: %d%%",cs.Name, cs.Ip, cs.Loss),
+		Msg: fmt.Sprintf("Name: %s, Ip: %s, PacketLoss: %d%%", cs.Name, cs.Ip, cs.Loss),
 	}, nil
 }

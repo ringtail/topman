@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"encoding/json"
 	"bytes"
-	"fmt"
+	log "github.com/sirupsen/logrus"
 )
 
 type Captain struct{
@@ -27,7 +27,7 @@ func (ct *Captain) Dispose(corsairInfo *CorsairInfo) (err error) {
 		},
 	}
 	dtmBytes, err := json.Marshal(dtm)
-	fmt.Printf("Yes,commander. Enemies are found: %s\n",corsairInfo.Msg)
+	log.Infof("Yes,commander. Enemies are found: %s\n",corsairInfo.Msg)
 	_, err = http.Post(ct.PhoneNumber, "application/json", bytes.NewBuffer(dtmBytes))
 	return
 }
