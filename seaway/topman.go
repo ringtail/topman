@@ -3,17 +3,17 @@ package seaway
 import (
 	"time"
 	"fmt"
-	log "github.com/sirupsen/logrus"
+	log "github.com/Sirupsen/logrus"
 )
 
 type Topman struct {
 	Interval int
-	Corsairs []*Corsair
+	Corsairs []Corsair
 	Captain  *Captain
-	IsLock bool
+	IsLock   bool
 }
 
-func (tm *Topman) Attention(){
+func (tm *Topman) Attention() {
 	attention_msg := `
 
                   ___                     ___          ___          ___              
@@ -34,13 +34,13 @@ func (tm *Topman) Attention(){
 	fmt.Println(attention_msg)
 }
 
-func (tm *Topman) OnDuty(corsairs []*Corsair, captain *Captain) (err error) {
+func (tm *Topman) OnDuty(corsairs []Corsair, captain *Captain) (err error) {
 	tm.Attention()
 	tm.Corsairs = corsairs
 	tm.Captain = captain
-	log.Debugf("Topman is onDuty with interval %d\n",tm.Interval)
+	log.Debugf("Topman is onDuty with interval %d\n", tm.Interval)
 	tm.LookoutAround()
-	ticker := time.NewTicker(time.Second *time.Duration(tm.Interval))
+	ticker := time.NewTicker(time.Second * time.Duration(tm.Interval))
 	quit := make(chan struct{})
 	for {
 		select {
@@ -58,13 +58,13 @@ func (tm *Topman) Report(corsairInfo *CorsairInfo) (err error) {
 	return tm.Captain.Dispose(corsairInfo)
 }
 
-func (tm *Topman) Lookout(corsair *Corsair) (err error) {
+func (tm *Topman) Lookout(corsair Corsair) (err error) {
 	spotted, err := corsair.Wigwag()
 	if err != nil {
 		return err
 	}
 	if spotted == true {
-		corsairInfo, err := corsair.Info()
+		corsairInfo, err := corsair.Msg()
 		if err != nil {
 			return err
 		}
@@ -86,8 +86,8 @@ func (tm *Topman) LookoutAround() (err error) {
 			c := tm.Corsairs[index]
 			err = tm.Lookout(c)
 			if err != nil {
-				log.Warnf("Topman failed to lookout %s,Because of %s",c.Name,err.Error())
-				}
+				log.Warnf("Topman failed to lookout %s,Because of %s", c.GetName(), err.Error())
+			}
 		}
 	}
 	tm.IsLock = false

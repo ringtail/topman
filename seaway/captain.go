@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"encoding/json"
 	"bytes"
-	log "github.com/sirupsen/logrus"
+	log "github.com/Sirupsen/logrus"
 )
 
-type Captain struct{
+type Captain struct {
 	PhoneNumber string
 }
 
@@ -27,7 +27,7 @@ func (ct *Captain) Dispose(corsairInfo *CorsairInfo) (err error) {
 		},
 	}
 	dtmBytes, err := json.Marshal(dtm)
-	log.Infof("Yes,commander. Enemies are found: %s\n",corsairInfo.Msg)
+	log.Infof("Yes,commander. Enemies are found: %s\n", corsairInfo.Msg)
 	_, err = http.Post(ct.PhoneNumber, "application/json", bytes.NewBuffer(dtmBytes))
 	return
 }
