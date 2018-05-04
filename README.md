@@ -42,10 +42,16 @@ topman is an alarm tool using dingding. topman support ping packet loss and tcp 
 ```
 2. run topman
 
+
 ```
-    topman -token https://oapi.dingtalk.com/robot/send?access_token=[your token] -config topman.conf
+# access token is from dingbot token.
+topman -token https://oapi.dingtalk.com/robot/send?access_token=[your token] -config topman.conf
+
 ```
 
+3. if some error occurred you will get the msg from dingbot
+
+<img src="https://moyuan.oss-cn-beijing.aliyuncs.com/github/topman/dingding.jpg"/>
 
 ## modules
 ping
