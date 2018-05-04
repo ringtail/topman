@@ -61,5 +61,5 @@ name:       the name of ping item
 host:       specific the domain or ip of the site
 ```
 
-## Others
+## others
 On macos ping module is not work very well.
