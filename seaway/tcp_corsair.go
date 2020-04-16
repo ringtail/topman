@@ -15,7 +15,8 @@ type TcpCorsair struct {
 }
 
 func (tc *TcpCorsair) Wigwag() (spotted bool, err error) {
-	_, err = net.DialTimeout("tcp", tc.Host, 3*time.Second)
+	c, err := net.DialTimeout("tcp", tc.Host, 3*time.Second)
+	defer c.Close()
 	if err != nil {
 		spotted = true
 		tc.blocked = true
